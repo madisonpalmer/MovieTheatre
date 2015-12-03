@@ -30,10 +30,16 @@
             print '<li><a href="descriptions.php"><button>Movie Descriptions</button></a></li>';
         }
         
-        if ($path_parts['filename'] == "index") {
+        if ($path_parts['filename'] == "upcoming") {
             print '<li class="activePage"><button>Upcoming Movies</button></li>';
         } else {
             print '<li><a href="upcoming.php"><button>Upcoming Movies</button></a></li>';
+        }
+        
+        if ($path_parts['filename'] == "suggestions") {
+            print '<li class="activePage"><button>Suggestions</button></li>';
+        } else {
+            print '<li><a href="suggestions.php"><button>Suggestions</button></a></li>';
         }
         
 //        if ($path_parts['filename'] == "populate-table.php") {

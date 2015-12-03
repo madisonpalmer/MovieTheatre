@@ -5,10 +5,10 @@ require_once('lib/custom-functions.php');
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Movies</title>
+        <title>Movie Showings</title>
         <meta charset="utf-8">
-        <meta name="author" content="Madison A. Palmer, Meaghan E. Winter and Pra Timsina">
-        <meta name="description" content="This website is for a movie theatre.">
+        <meta name="author" content="Meaghan Winter">
+        <meta name="description" content="Movie Information and Showtimes">
 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -20,7 +20,6 @@ require_once('lib/custom-functions.php');
 
         <?php
         $debug = false;
-
         // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
         //
         // inlcude all libraries. Note some are in lib and some are in bin
@@ -38,10 +37,11 @@ require_once('lib/custom-functions.php');
         
         
         require_once($includeLibPath . 'mailMessage.php');
-
         require_once('lib/security.php');
         
         require_once($includeDBPath . 'Database.php');
+        
+        require_once('lib/validation-functions.php');
         
         // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
         //
@@ -55,15 +55,10 @@ require_once('lib/custom-functions.php');
         }
         
         $domain = "//"; // let the server set http or https as needed
-
         $server = htmlentities($_SERVER['SERVER_NAME'], ENT_QUOTES, "UTF-8");
-
         $domain .= $server;
-
         $phpSelf = htmlentities($_SERVER['PHP_SELF'], ENT_QUOTES, "UTF-8");
-
         $path_parts = pathinfo($phpSelf);
-
         if ($debug) {
             print "<p>Domain" . $domain;
             print "<p>php Self" . $phpSelf;
@@ -73,7 +68,6 @@ require_once('lib/custom-functions.php');
         }
         
         $yourURL = $domain . $phpSelf;
-
         // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
         // sanatize global variables 
         // function sanitize($string, $spacesAllowed)
@@ -83,9 +77,7 @@ require_once('lib/custom-functions.php');
         // generally our forms dont contain an array of elements. Sometimes
         // I have an array of check boxes so i would have to sanatize that, here
         // i skip it.
-
         $spaceAllowedPages = array("form.php");
-
         if (!empty($_GET)) {
             $_GET = filter_input_array(INPUT_GET, FILTER_SANITIZE_STRING);
             foreach ($_GET as $key => $value) {
@@ -102,7 +94,6 @@ require_once('lib/custom-functions.php');
             print "<p>Login failed: " . date("F j, Y") . " at " . date("h:i:s") . "</p>\n";
             die("<p>Sorry you cannot access this page. Security breach detected and reported</p>");
         }
-
         // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
         //
         // Set up database connection
@@ -111,7 +102,6 @@ require_once('lib/custom-functions.php');
         $dbUserName = get_current_user() . '_reader';
         $whichPass = "r"; //flag for which one to use.
         $dbName = DATABASE_NAME;
-
         $thisDatabaseReader = new Database($dbUserName, $whichPass, $dbName);
         
         $dbUserName = get_current_user() . '_writer';
