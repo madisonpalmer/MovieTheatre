@@ -2,7 +2,7 @@
 /* the purpose of this page is to display a form to allow a user and allow us
  * to add a new user or update an existing user 
  * 
- * Written By: Robert Erickson robert.erickson@uvm.edu
+ * Written By: Meaghan Winter
  */
 include "top.php";
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
@@ -25,18 +25,20 @@ $yourURL = $domain . $phpSelf;
 // in the order they appear on the form
 if (isset($_GET["id"])) {
     $pmkUserId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
-    $query = 'SELECT fldFirstName, fldLastName, fldBirthDate ';
-    $query .= 'FROM tblUserInfo ';
-    //        . 'WHERE pmkUserId = ?';
-    $results = $thisDatabaseWriter->select($query, array($pmkUserId), 0, 0, 0, 0, false, false);
+    $query = 'SELECT fldFirstName, fldLastName, fldBirthDate, fldEmail ';
+    $query .= 'FROM tblUserInfo '
+            . 'WHERE pmkUserId = ?';
+    $results = $thisDatabaseWriter->select($query, array($pmkUserId), 1, 0, 0, 0, false, false);
     $firstName = $results[0]["fldFirstName"];
     $lastName = $results[0]["fldLastName"];
     $birthday = $results[0]["fldBirthDate"];
+    $email = $results[0]["fldEmail"];
 } else {
     $pmkUserId = -1;
     $firstName = "";
     $lastName = "";
     $birthday = "";
+    $email = "";
 }
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
@@ -47,6 +49,7 @@ if (isset($_GET["id"])) {
 $firstNameERROR = false;
 $lastNameERROR = false;
 $birthdayERROR = false;
+$emailERROR = false;
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1e misc variables
@@ -86,6 +89,8 @@ if (isset($_POST["btnSubmit"])) {
     $data[] = $lastName;
     $birthday = htmlentities($_POST["txtBirthday"], ENT_QUOTES, "UTF-8");
     $data[] = $birthday;
+    $email = filter_var($_POST["txtEmail"], FILTER_SANITIZE_EMAIL, 'UTF-8');
+    $data[] = $email;
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2c Validation
@@ -108,6 +113,15 @@ if (isset($_POST["btnSubmit"])) {
         $errorMsg[] = "Please enter your birthday";
         $birthdayERROR = true;
     }// should check to make sure its the correct date format
+    //
+//email checking
+    if ($email == "") {
+        $errorMsg[] = "Please enter your email address";
+        $emailERROR = true;
+    } elseif (!verifyEmail($email)) {
+        $errorMsg[] = "Your email address appears to be incorrect.";
+        $emailERROR = true;
+    }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2d Process Form - Passed Validation
@@ -138,25 +152,26 @@ if (isset($_POST["btnSubmit"])) {
             }
             $query .= 'fldFirstName = ?, ';
             $query .= 'fldLastName = ?, ';
-            $query .= 'fldBirthDate = ? ';
+            $query .= 'fldBirthDate = ?, ';
+            $query .= 'fldEmail = ? ';
             if ($debug) {
                 print '<p> after query';
             }
-//            if ($update) {
-//                $query .= 'WHERE pmkUserId = ?';
-//                $data[] = $pmkUserId;
-                //if ($_SERVER["REMOTE_USER"] == 'mpalmer5') {
-                    $results = $thisDatabaseWriter->update($query, $data, 1, 0, 0, 0, false, false);
-               // }
-          //  } else {
-           //     if ($_SERVER["REMOTE_USER"] == 'mpalmer5') {
-                    $results = $thisDatabaseWriter->insert($query, $data);
-                    $primaryKey = $thisDatabaseWriter->lastInsert();
-                    if ($debug) {
-                        print "<p>pmk= " . $primaryKey;
-                    }
-            //    }
-//            }
+            if ($update) {
+                $query .= 'WHERE pmkUserId = ?';
+                $data[] = $pmkUserId;
+                //if ($_SERVER["REMOTE_USER"] == 'mewinter') {
+                $results = $thisDatabaseWriter->update($query, $data, 1, 0, 0, 0, false, false);
+                // }
+                  } else {
+                //     if ($_SERVER["REMOTE_USER"] == 'mewinter') {
+                $results = $thisDatabaseWriter->insert($query, $data);
+                $primaryKey = $thisDatabaseWriter->lastInsert();
+                if ($debug) {
+                    print "<p>pmk= " . $primaryKey;
+                }
+            }
+//               }
             if ($debug) {
                 print '<p> update';
             }
@@ -261,11 +276,21 @@ if ($debug) {
                 <label for="txtBirthday" class="required">Birthday
                     <input type="text" id="txtBirthday" name="txtBirthday"
                            value="<?php print $birthday; ?>"
-                           tabindex="100" maxlength="45" placeholder="Enter your Birthday"
+                           tabindex="100" maxlength="45" placeholder="YYYY-MM-DD"
                            <?php if ($birthdayERROR) print 'class="mistake"'; ?>
                            onfocus="this.select()"
                            >
-                </label>                
+                </label>  
+
+                <label for="txtEmail" class="required">Email
+                    <input type="text" id="txtEmail" name="txtEmail"
+                           value="<?php print $email; ?>"
+                           tabindex="120" maxlength="45" placeholder="Enter a valid email address"
+                           <?php if ($emailERROR) print 'class="mistake"'; ?>
+                           onfocus="this.select()" 
+                           autofocus>
+                </label>
+
             </fieldset> <!-- ends contact -->
             </fieldset> <!-- ends wrapper Two -->
             <fieldset class="buttons">
