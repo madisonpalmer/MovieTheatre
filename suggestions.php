@@ -58,6 +58,11 @@ $emailERROR = false;
 $errorMsg = array();
 $data = array();
 $dataEntered = false;
+// used for building email message to be sent and displayed
+$mailed = false;
+$messageA = "";
+$messageB = "";
+$messageC = "";
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 //
 // SECTION: 2 Process for when the form is submitted
@@ -130,7 +135,6 @@ if (isset($_POST["btnSubmit"])) {
 //
     if (!$errorMsg) {
         if ($debug) {
-            print '<p> 2d';
             print "<p>Form is valid</p>";
         }
 //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -139,6 +143,7 @@ if (isset($_POST["btnSubmit"])) {
         if ($debug) {
             print '<p> 2e';
         }
+        $primaryKey = "";
         $dataEntered = false;
         try {
             $thisDatabaseWriter->db->beginTransaction();
@@ -157,6 +162,10 @@ if (isset($_POST["btnSubmit"])) {
             if ($debug) {
                 print '<p> after query';
             }
+            
+            $data = array($email);
+            
+
             if ($update) {
                 $query .= 'WHERE pmkUserId = ?';
                 $data[] = $pmkUserId;
@@ -181,6 +190,7 @@ if (isset($_POST["btnSubmit"])) {
             // }else{
             //     $thisDatabase->db->rollback();
             // }
+            $dataEntered = true;
             if ($debug)
                 print "<p>transaction complete ";
         } catch (PDOExecption $e) {
@@ -189,6 +199,54 @@ if (isset($_POST["btnSubmit"])) {
                 print "Error!: " . $e->getMessage() . "</br>";
             $errorMsg[] = "There was a problem with accpeting your data please contact us directly.";
         }
+        // If the transaction was successful, give success message
+        if ($dataEntered) {
+            if ($debug)
+                print "<p>data entered now prepare keys ";
+            //#################################################################
+            // create a key value for confirmation
+
+            $query = "SELECT fldDateJoined FROM tblUserInfo WHERE pmkUserId=" . $primaryKey;
+            $results = $thisDatabase->select($query);
+
+            $dateSubmitted = $results[0]["fldDateJoined"];
+
+            $key1 = sha1($dateSubmitted);
+            $key2 = $primaryKey;
+
+            if ($debug)
+                print "<p>key 1: " . $key1;
+            if ($debug)
+                print "<p>key 2: " . $key2;
+
+            print '<p> selct thing works</p>';
+            //#################################################################
+            //
+            //Put forms information into a variable to print on the screen
+            //
+
+            $messageA = '<h2>Thank you for registering.</h2>';
+
+            $messageB = "<p>Click this link to confirm your registration: ";
+            $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
+            $messageB .= "<p>or copy and paste this url into a web browser: ";
+            $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
+
+            $messageC .= "<p><b>Email Address:</b><i>   " . $email . "</i></p>";
+
+            //##############################################################
+            //
+            // email the form's information
+            //
+            $to = $email; // the person who filled out the form
+            $cc = "";
+            $bcc = "";
+            $from = "DigiPix <noreply@yoursite.com>";
+            $subject = "Confirm email for DigiPix";
+
+            $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
+        } //data entered  
+        print'<p>data mailed</p>';
     } // end form is valid
 } // ends if form was submitted.
 if ($debug) {
@@ -206,14 +264,32 @@ if ($debug) {
 //
 // SECTION 3a.
 //
-//
+//// If its the first time coming to the form or there are errors we are going
+// to display the form.
+    
 //
 //
 // If its the first time coming to the form or there are errors we are going
 // to display the form.
-    if ($dataEntered) { // closing of if marked with: end body submit
-        print "<h1>Record Saved</h1> ";
+//    if ($dataEntered) { // closing of if marked with: end body submit
+//        print "<h1>Record Saved</h1> ";
+//    } else {
+    if (isset($_POST["btnSubmit"]) AND empty($errorMsg)) { // closing of if marked with: end body submit
+        print "<h1>Your Request has ";
+        if (!$mailed) {
+            print "not ";
+        }
+        print "been processed</h1>";
+        print "<p>A copy of this message has ";
+        if (!$mailed) {
+            print "not ";
+        }
+        print "been sent</p>";
+        print "<p>To: " . $email . "</p>";
+        print "<p>Mail Message:</p>";
+        print $messageA . $messageC;
     } else {
+        
 //####################################
 //
 // SECTION 3b Error Messages
