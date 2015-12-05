@@ -163,7 +163,7 @@ if (isset($_POST["btnSubmit"])) {
                 print '<p> after query';
             }
             
-            $data = array($email);
+            //$data = array($email);
             
 
             if ($update) {
@@ -180,6 +180,7 @@ if (isset($_POST["btnSubmit"])) {
                     print "<p>pmk= " . $primaryKey;
                 }
             }
+           
 //               }
             if ($debug) {
                 print '<p> update';
@@ -206,11 +207,15 @@ if (isset($_POST["btnSubmit"])) {
             //#################################################################
             // create a key value for confirmation
 
+            
             $query = "SELECT fldDateJoined FROM tblUserInfo WHERE pmkUserId=" . $primaryKey;
-            $results = $thisDatabase->select($query);
+           
+            $results = $thisDatabaseReader->select($query);
+            print "<p>1";
 
             $dateSubmitted = $results[0]["fldDateJoined"];
 
+            print "<p>2";
             $key1 = sha1($dateSubmitted);
             $key2 = $primaryKey;
 

@@ -75,7 +75,7 @@ if (isset($_GET["q"])) {
             print "<h1>Confirmed</h1>";
 
         $query = "UPDATE tblUserInfo set fldConfirmed=1 WHERE pmkUserId = ? ";
-        $results = $thisDatabase->update($query, $data);
+        $results = $thisDatabaseWriter->update($query, $data);
 
         if ($debug) {
             print "<p>Query: " . $query;

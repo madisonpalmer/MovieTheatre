@@ -1,7 +1,3 @@
-<?php
-include "lib/constants.php";
-require_once('lib/custom-functions.php');
-?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -33,15 +29,18 @@ require_once('lib/custom-functions.php');
         
         
         $includeDBPath = "../bin/";
-        $includeLibPath = "../lib/";
+        $includeLibPath = "lib/";
         
-        
-        require_once($includeLibPath . 'mailMessage.php');
-        require_once('lib/security.php');
+        require_once($includeLibPath .'constants.php');
+        require_once($includeLibPath .'custom-functions.php');
+        require_once($includeLibPath . 'mail-message.php');
+        require_once($includeLibPath .'security.php');
+        require_once($includeLibPath .'validation-functions.php');
         
         require_once($includeDBPath . 'Database.php');
         
-        require_once('lib/validation-functions.php');
+        
+        
         
         // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
         //
