@@ -17,6 +17,8 @@ foreach ($queryDescription as $rec) {
 }
 print '</div>';	
 
+print '<iframe src="https://mapsengine.google.com/map/embed?mid=zYqtd2ktlY2I.kN3FwOP_QGnU" width="640" height="480"></iframe>';
+
 
 include "footer.php";
 ?>

@@ -52,7 +52,7 @@ if (isset($_GET["q"])) {
     // get the membership record 
 
     $query = "SELECT fldDateJoined, fldEmail FROM tblUserInfo WHERE pmkUserId = ? ";
-    $results = $thisDatabase->select($query, $data);
+    $results = $thisDatabaseReader->select($query, $data);
 
     $dateSubmitted = $results[0]["fldDateJoined"];
     $email = $results[0]["fldEmail"];

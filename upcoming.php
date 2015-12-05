@@ -2,7 +2,7 @@
 
 include "top.php";
 print '<h2>Upcoming Movies</h2>';
-print '<table>';
+
 
 //now print out each record
 $columns = 4; 
@@ -12,13 +12,12 @@ $queryDescription = $thisDatabaseReader->select($query, "", 1, 0, 2, 0, false, f
 
 
 foreach ($queryDescription as $rec) {
-    print '<tr>';
-    print '<td><img class="imgdescription" src="' . $rec['fldPicture'] . '">';
-    print '<td>' . $rec['fldTitle'] . '</td>';
-    print '<td>' . $rec['fldStatus'] . '</td>';
-    print '</tr>';
+    //print '<tr>';
+    print '<span><img class="imgdescription" src="' . $rec['fldPicture'] . '">';
+    print '<p class="txtdescription">' . $rec['fldTitle'] . '</p></span>';
+    
 }
-print '</table>';
+
 
 include "footer.php";
 ?>
