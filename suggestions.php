@@ -25,7 +25,7 @@ $yourURL = $domain . $phpSelf;
 // in the order they appear on the form
 if (isset($_GET["id"])) {
     $pmkUserId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
-    $query = 'SELECT fldFirstName, fldLastName, fldBirthDate, fldEmail ';
+    $query = 'SELECT fldFirstName, fldLastName, fldBirthDate, fldEmail, fnkGenre ';
     $query .= 'FROM tblUserInfo '
             . 'WHERE pmkUserId = ?';
     $results = $thisDatabaseWriter->select($query, array($pmkUserId), 1, 0, 0, 0, false, false);
@@ -33,13 +33,21 @@ if (isset($_GET["id"])) {
     $lastName = $results[0]["fldLastName"];
     $birthday = $results[0]["fldBirthDate"];
     $email = $results[0]["fldEmail"];
+    $genres = $results1[0]["fnkGenre"];
+    
+    $query1 = 'SELECT fldGenre, pmkMovieId FROM tblMovies GROUP BY fldGenre';
+    $genres = $thisDatabaseReader->select($query1, "", 0, 0, 0, 0, false, false);
+    
+    
 } else {
     $pmkUserId = -1;
     $firstName = "";
     $lastName = "";
     $birthday = "";
     $email = "";
+    $genres = "";
 }
+
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1d form error flags
@@ -50,6 +58,7 @@ $firstNameERROR = false;
 $lastNameERROR = false;
 $birthdayERROR = false;
 $emailERROR = false;
+$genresERROR = false;
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1e misc variables
@@ -159,6 +168,7 @@ if (isset($_POST["btnSubmit"])) {
             $query .= 'fldLastName = ?, ';
             $query .= 'fldBirthDate = ?, ';
             $query .= 'fldEmail = ? ';
+            $query .= 'fldGenre = fnkGenre';
             if ($debug) {
                 print '<p> after query';
             }
@@ -373,6 +383,24 @@ if ($debug) {
                 </label>
 
             </fieldset> <!-- ends contact -->
+            <?php
+            $output = array();
+            $output[] = '<h2>Genres</h2>';
+            $output[] = '<form>';
+            $output[] = '<fieldset class="checkbox">';
+            $output[] = '<legend>Do you like (check all that apply):</legend>';
+        //print '<pre>';
+        //print_r ($genres);
+            foreach ($genres as $row) {
+                $output[] = '<label for="chk' . str_replace(" ", "-", $row["fldGenre"]) . '"><input type="checkbox" ';
+                $output[] = ' id="chk' . str_replace(" ", "-", $row["fldGenre"]) . '" ';
+                $output[] = ' name="chk' . str_replace(" ", "-", $row["fldGenre"]) . '" ';
+                $output[] = 'value="' . $row["pmkMovieId"] . '">' . $row["fldGenre"];
+                $output[] = '</label>';
+            }
+            $output[] = '</fieldset>';
+            print join("\n", $output);
+            ?>
             </fieldset> <!-- ends wrapper Two -->
             <fieldset class="buttons">
                 <legend></legend>
