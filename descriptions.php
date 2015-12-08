@@ -10,7 +10,7 @@ print '<br />';
 
 //now print out each record
 $columns = 2; 
-$query = 'SELECT fldPicture, fldDescription, fldRating, fldLength, fldTitle FROM tblMovies';
+$query = 'SELECT fldPicture, fldDescription, fldRating, fldLength, lstTitle FROM tblMovies';
 //$info2 = $thisDatabaseReader->testquery($query, "", 0, 0, 0, 0, false, false);
 $queryDescription = $thisDatabaseReader->select($query, "", 0, 0, 0, 0, false, false);
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Movie Showings</title>
+        <title>DigiPix</title>
         <meta charset="utf-8">
         <meta name="author" content="Meaghan Winter">
         <meta name="description" content="Movie Information and Showtimes">

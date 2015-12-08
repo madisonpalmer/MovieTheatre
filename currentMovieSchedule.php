@@ -10,7 +10,7 @@ include "top.php";
     <?php
      print '<table>';
     //now print out each record
-    $query = 'select distinct pmkTimeStart, fldTitle, fldRating, fldLength from tblSchedule inner join tblMovies on pmkMovieId where pmkMovieId = fnkMovieId'; 
+    $query = 'select distinct pmkTimeStart, lstTitle, fldRating, fldLength from tblSchedule inner join tblMovies on pmkMovieId where pmkMovieId = fnkMovieId'; 
     //$info2 = $thisDatabaseReader->testquery($query, "", 1, 0, 0, 0, false, false);
     $info2 = $thisDatabaseReader->select($query, "", 1, 0, 0, 0, false, false);
     
