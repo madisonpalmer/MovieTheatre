@@ -25,7 +25,7 @@ $yourURL = $domain . $phpSelf;
 // in the order they appear on the form
 if (isset($_GET["id"])) {
     $pmkUserId = (int) htmlentities($_GET["id"], ENT_QUOTES, "UTF-8");
-    $query = 'SELECT fldFirstName, fldLastName, fldBirthDate, fldEmail, fnkGenre ';
+    $query = 'SELECT fldFirstName, fldLastName, fldBirthDate, fldEmail ';
     $query .= 'FROM tblUserInfo '
             . 'WHERE pmkUserId = ?';
     $results = $thisDatabaseWriter->select($query, array($pmkUserId), 1, 0, 0, 0, false, false);
@@ -33,21 +33,13 @@ if (isset($_GET["id"])) {
     $lastName = $results[0]["fldLastName"];
     $birthday = $results[0]["fldBirthDate"];
     $email = $results[0]["fldEmail"];
-    $genres = $results1[0]["fnkGenre"];
-    
-    $query1 = 'SELECT fldGenre, pmkMovieId FROM tblMovies GROUP BY fldGenre';
-    $genres = $thisDatabaseReader->select($query1, "", 0, 0, 0, 0, false, false);
-    
-    
 } else {
     $pmkUserId = -1;
     $firstName = "";
     $lastName = "";
     $birthday = "";
     $email = "";
-    $genres = "";
 }
-
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1d form error flags
@@ -58,7 +50,6 @@ $firstNameERROR = false;
 $lastNameERROR = false;
 $birthdayERROR = false;
 $emailERROR = false;
-$genresERROR = false;
 //%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
 //
 // SECTION: 1e misc variables
@@ -168,14 +159,12 @@ if (isset($_POST["btnSubmit"])) {
             $query .= 'fldLastName = ?, ';
             $query .= 'fldBirthDate = ?, ';
             $query .= 'fldEmail = ? ';
-            $query .= 'fldGenre = fnkGenre';
             if ($debug) {
                 print '<p> after query';
             }
             
             //$data = array($email);
             
-
             if ($update) {
                 $query .= 'WHERE pmkUserId = ?';
                 $data[] = $pmkUserId;
@@ -216,39 +205,30 @@ if (isset($_POST["btnSubmit"])) {
                 print "<p>data entered now prepare keys ";
             //#################################################################
             // create a key value for confirmation
-
             
             $query = "SELECT fldDateJoined FROM tblUserInfo WHERE pmkUserId=" . $primaryKey;
            
             $results = $thisDatabaseReader->select($query);
             print "<p>1";
-
             $dateSubmitted = $results[0]["fldDateJoined"];
-
             print "<p>2";
             $key1 = sha1($dateSubmitted);
             $key2 = $primaryKey;
-
             if ($debug)
                 print "<p>key 1: " . $key1;
             if ($debug)
                 print "<p>key 2: " . $key2;
-
             print '<p> selct thing works</p>';
             //#################################################################
             //
             //Put forms information into a variable to print on the screen
             //
-
             $messageA = '<h2>Thank you for registering.</h2>';
-
             $messageB = "<p>Click this link to confirm your registration: ";
             $messageB .= '<a href="' . $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . '">Confirm Registration</a></p>';
             $messageB .= "<p>or copy and paste this url into a web browser: ";
             $messageB .= $domain . $path_parts["dirname"] . '/confirmation.php?q=' . $key1 . '&amp;w=' . $key2 . "</p>";
-
             $messageC .= "<p><b>Email Address:</b><i>   " . $email . "</i></p>";
-
             //##############################################################
             //
             // email the form's information
@@ -258,7 +238,6 @@ if (isset($_POST["btnSubmit"])) {
             $bcc = "";
             $from = "DigiPix <noreply@yoursite.com>";
             $subject = "Confirm email for DigiPix";
-
             $mailed = sendMail($to, $cc, $bcc, $from, $subject, $messageA . $messageB . $messageC);
         } //data entered  
         print'<p>data mailed</p>';
@@ -383,24 +362,6 @@ if ($debug) {
                 </label>
 
             </fieldset> <!-- ends contact -->
-            <?php
-            $output = array();
-            $output[] = '<h2>Genres</h2>';
-            $output[] = '<form>';
-            $output[] = '<fieldset class="checkbox">';
-            $output[] = '<legend>Do you like (check all that apply):</legend>';
-        //print '<pre>';
-        //print_r ($genres);
-            foreach ($genres as $row) {
-                $output[] = '<label for="chk' . str_replace(" ", "-", $row["fldGenre"]) . '"><input type="checkbox" ';
-                $output[] = ' id="chk' . str_replace(" ", "-", $row["fldGenre"]) . '" ';
-                $output[] = ' name="chk' . str_replace(" ", "-", $row["fldGenre"]) . '" ';
-                $output[] = 'value="' . $row["pmkMovieId"] . '">' . $row["fldGenre"];
-                $output[] = '</label>';
-            }
-            $output[] = '</fieldset>';
-            print join("\n", $output);
-            ?>
             </fieldset> <!-- ends wrapper Two -->
             <fieldset class="buttons">
                 <legend></legend>

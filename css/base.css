@@ -33,10 +33,10 @@ header .float_left{
 }*/
 
 img.imgdescription{
-    height: 50%;
-    width: 20%;
-    padding-left: 5em;
-    padding-bottom: 1em;
+    //height: 50%;
+    //width: 20%;
+    //padding-left: 5em;
+    //padding-bottom: 1em;
     
     //float: left;
 }
@@ -48,7 +48,7 @@ p.txtdescription{
     padding-right: 5em;
 }
 
-div.description{
+span.description{
     margin-left:auto;
     margin-right:auto;
 }
@@ -57,7 +57,7 @@ section{
     padding: 2em;
     width: 40%;  
 }
-button .navbar {
+/*button .navbar {
    border-top: 1px solid #96d1f8;
    background: #65a9d7;
    background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
@@ -87,7 +87,7 @@ button .navbar :hover {
 button .navbar :active {
    border-top-color: #1b435e;
    background: #1b435e;
-   }
+   }*/
 
 /*------------------------   classes           ------------------------------ */
 .float_left {
@@ -161,10 +161,10 @@ table :hover
                 height: 400px;
                 }
             #accordion div {
-                    height:800px;
+                    height:300px;
                     overflow: hidden;}
             #accordion:hover div {
-                    height: 800px; }
+                    height: 300px; }
             #accordion:hover div:hover {
                     height: 300px;
                     overflow: hidden; }
@@ -202,7 +202,7 @@ img.accordion{
 
 
 /*----------------------------------form--------------------------------*/
-form {width: 75%; 
+form {width: 400px; 
 }
 
 button {
@@ -302,7 +302,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-img.head {
+img {
   max-width: 100%;
   height: auto;
   -ms-interpolation-mode: bicubic;
@@ -329,7 +329,7 @@ select {
 .mqa-display object {
   max-width: none !important; }
 
-button {
+/*button {
   -webkit-appearance: none;
   -moz-appearance: none;
   background: transparent;
@@ -457,7 +457,7 @@ button {
   .button.arrow-only::after {
     margin-left: 0;
     float: none;
-    top: 0.2em; }
+    top: 0.2em; }*/
 
 [type='text'], [type='password'], [type='date'], [type='datetime'], [type='datetime-local'], [type='month'], [type='week'], [type='email'], [type='number'], [type='search'], [type='tel'], [type='time'], [type='url'], [type='color'],
 textarea {

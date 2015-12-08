@@ -1,7 +1,10 @@
 <?php
 
 include "top.php";
-print '<h2>Upcoming Movies</h2>';
+print '<div id="header">';
+print '<h1>Upcoming Movies</h1>';
+print '</div>';
+print '<br />';
 
 
 //now print out each record
@@ -10,13 +13,19 @@ $query = "SELECT fldPicture, fldTitle, fldDescription, fldStatus FROM tblMovies 
 //$info2 = $thisDatabaseReader->testquery($query, "", 0, 0, 0, 0, false, false);
 $queryDescription = $thisDatabaseReader->select($query, "", 1, 0, 2, 0, false, false);
 
-
+print '<div class="container-fluid">';
+print '<div class="row">';
 foreach ($queryDescription as $rec) {
     //print '<tr>';
-    print '<span><img class="imgdescription" src="' . $rec['fldPicture'] . '">';
-    print '<p class="txtdescription">' . $rec['fldTitle'] . '</p></span>';
+    print '<div class="col-md-3"><img src="' . $rec['fldPicture'] . '">';
+    print '<p>' . $rec['fldTitle'] . '</p>';
+    print '<br />';
+    print '</div>';
     
 }
+
+print '</div>';
+print '</div>';
 
 
 include "footer.php";

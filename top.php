@@ -11,9 +11,10 @@
         <!--[if lt IE 9]>
         <script src="//html5shim.googlecode.com/sin/trunk/html5.js"></script>
         <![endif]-->
-
+        
         <link rel="stylesheet" href="css/base.css" type="text/css" media="screen">
-
+        <link href="css/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="css/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
         <?php
         $debug = false;
         // %^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%
